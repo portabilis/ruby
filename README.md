@@ -1160,17 +1160,17 @@ In either case:
       # exception handling
     end
 
+    # bad
+    begin
+      # an exception occurs here
+    rescue
+      # exception handling
+    end
+
     # good
     begin
       # an exception occurs here
     rescue StandardError
-      # exception handling
-    end
-
-    # acceptable
-    begin
-      # an exception occurs here
-    rescue
       # exception handling
     end
     ```
@@ -1277,7 +1277,7 @@ In either case:
     hash = { 'one' => 1, 'two' => 2, 'three' => 3 }
 
     # good
-    hash = { :one => 1, :two => 2, :three => 3 }
+    hash = { one: 1, two: 2, three: 3 }
     ```
 
 * <a name="symbol-literals"></a>Relatedly, use plain symbols instead of string
@@ -1313,12 +1313,12 @@ In either case:
 
     ```ruby
     hash = {
-      :protocol => 'https',
-      :only_path => false,
-      :controller => :users,
-      :action => :set_password,
-      :redirect => @redirect_url,
-      :secret => @secret,
+      protocol: 'https',
+      only_path: false,
+      controller: :users,
+      action: :set_password,
+      redirect: @redirect_url,
+      secret: @secret,
     }
     ```
 
@@ -1331,10 +1331,10 @@ In either case:
 
     # good
     array = [
-      "car",
-      "bear",
-      "plane",
-      "zoo",
+      'car',
+      'bear',
+      'plane',
+      'zoo',
     ]
     ```
 
@@ -1349,23 +1349,6 @@ In either case:
 
     # good
     email_with_name = "#{user.name} <#{user.email}>"
-    ```
-
-  Furthermore, keep in mind Ruby 1.9-style interpolation. Let's say you are
-  composing cache keys like this:
-
-    ```ruby
-    CACHE_KEY = '_store'
-
-    cache.write(@user.id + CACHE_KEY)
-    ```
-
-    Prefer string interpolation instead of string concatenation:
-
-    ```ruby
-    CACHE_KEY = '%d_store'
-
-    cache.write(CACHE_KEY % @user.id)
     ```
 
 * <a name="string-concatenation"></a>Avoid using `String#+` when you need to
@@ -1522,18 +1505,18 @@ In either case:
 
     ```ruby
     # bad
-    render :text => 'Howdy' and return
+    render text: 'Howdy' && return
 
     # good
-    render :text => 'Howdy'
+    render text: 'Howdy'
     return
 
     # still bad
-    render :text => 'Howdy' and return if foo.present?
+    render text: 'Howdy' && return if foo.present?
 
     # good
     if foo.present?
-      render :text => 'Howdy'
+      render text: 'Howdy'
       return
     end
     ```
@@ -1546,10 +1529,17 @@ In either case:
 
     ```ruby
     # bad
-    scope :foo, where(:bar => 1)
+    scope :foo, where(bar: 1)
 
     # good
-    scope :foo, -> { where(:bar => 1) }
+    scope :foo, -> { where(bar: 1) }
+    
+    # bad
+    scope :foo, -> (user_id) where(user_id: user_id)
+
+    # good
+    scope :foo, ->(user_id) { where(user_id: user_id) }
+    ```
     ```
 
 ## Be Consistent
@@ -1578,9 +1568,3 @@ In either case:
 [ruby-naming-bang]: http://dablog.rubypal.com/2007/8/15/bang-methods-or-danger-will-rubyist
 [ruby-freeze]: https://blog.honeybadger.io/when-to-use-freeze-and-frozen-in-ruby/
 [avoid-else-return-early]: http://blog.timoxley.com/post/47041269194/avoid-else-return-early
-
-## Translation
-
-  This style guide is also available in other languages:
-
-  - ![cn](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/China.png) **Chinese (Simplified)**: [1c7/ruby-airbnb](https://github.com/1c7/ruby-airbnb)
