@@ -80,7 +80,7 @@ Airbnb also maintains a [JavaScript Style Guide][airbnb-javascript].
       ...
     end
 
-    # good
+    # bad
     def self.create_translation(phrase_id,
                                 phrase_key,
                                 target_locale,
@@ -223,7 +223,7 @@ Airbnb also maintains a [JavaScript Style Guide][airbnb-javascript].
     end
     ```
 
-* <a name="newline-after-conditional"></a>Add a new line after conditionals,
+* <a name="newline-after-conditional"></a>Add a new line before and after conditionals,
     blocks, case statements, etc.<sup>[[link](#newline-after-conditional)]</sup>
 
     ```ruby
@@ -281,6 +281,7 @@ Airbnb also maintains a [JavaScript Style Guide][airbnb-javascript].
       car.assign_cool_name!
 
       fleet.add(car)
+      
       car
     end
     ```
@@ -292,7 +293,7 @@ Airbnb also maintains a [JavaScript Style Guide][airbnb-javascript].
 ## Line Length
 
 * Keep each line of code to a readable length. Unless
-  you have a reason to, keep lines to fewer than 100 characters.
+  you have a reason to, keep lines to fewer than 115 characters.
   ([rationale](./rationales.md#line-length))<sup>
   [[link](#line-length)]</sup>
 
@@ -311,190 +312,6 @@ Airbnb also maintains a [JavaScript Style Guide][airbnb-javascript].
 
 Portions of this section borrow heavily from the Google
 [C++][google-c++-comments] and [Python][google-python-comments] style guides.
-
-### File/class-level comments
-
-Every class definition should have an accompanying comment that describes what
-it is for and how it should be used.
-
-A file that contains zero classes or more than one class should have a comment
-at the top describing its contents.
-
-```ruby
-# Automatic conversion of one locale to another where it is possible, like
-# American to British English.
-module Translation
-  # Class for converting between text between similar locales.
-  # Right now only conversion between American English -> British, Canadian,
-  # Australian, New Zealand variations is provided.
-  class PrimAndProper
-    def initialize
-      @converters = { :en => { :"en-AU" => AmericanToAustralian.new,
-                               :"en-CA" => AmericanToCanadian.new,
-                               :"en-GB" => AmericanToBritish.new,
-                               :"en-NZ" => AmericanToKiwi.new,
-                             } }
-    end
-
-  ...
-
-  # Applies transforms to American English that are common to
-  # variants of all other English colonies.
-  class AmericanToColonial
-    ...
-  end
-
-  # Converts American to British English.
-  # In addition to general Colonial English variations, changes "apartment"
-  # to "flat".
-  class AmericanToBritish < AmericanToColonial
-    ...
-  end
-```
-
-All files, including data and config files, should have file-level comments.
-
-```ruby
-# List of American-to-British spelling variants.
-#
-# This list is made with
-# lib/tasks/list_american_to_british_spelling_variants.rake.
-#
-# It contains words with general spelling variation patterns:
-#   [trave]led/lled, [real]ize/ise, [flav]or/our, [cent]er/re, plus
-# and these extras:
-#   learned/learnt, practices/practises, airplane/aeroplane, ...
-
-sectarianizes: sectarianises
-neutralization: neutralisation
-...
-```
-
-### Function comments
-
-Every function declaration should have comments immediately preceding it that
-describe what the function does and how to use it. These comments should be
-descriptive ("Opens the file") rather than imperative ("Open the file"); the
-comment describes the function, it does not tell the function what to do. In
-general, these comments do not describe how the function performs its task.
-Instead, that should be left to comments interspersed in the function's code.
-
-Every function should mention what the inputs and outputs are, unless it meets
-all of the following criteria:
-
-* not externally visible
-* very short
-* obvious
-
-You may use whatever format you wish. In Ruby, two popular function
-documentation schemes are [TomDoc](http://tomdoc.org/) and
-[YARD](https://rubydoc.info/docs/yard/file/docs/GettingStarted.md). You can also
-just write things out concisely:
-
-```ruby
-# Returns the fallback locales for the_locale.
-# If opts[:exclude_default] is set, the default locale, which is otherwise
-# always the last one in the returned list, will be excluded.
-#
-# For example:
-#   fallbacks_for(:"pt-BR")
-#     => [:"pt-BR", :pt, :en]
-#   fallbacks_for(:"pt-BR", :exclude_default => true)
-#     => [:"pt-BR", :pt]
-def fallbacks_for(the_locale, opts = {})
-  ...
-end
-```
-
-### Block and inline comments
-
-The final place to have comments is in tricky parts of the code. If you're
-going to have to explain it at the next code review, you should comment it now.
-Complicated operations get a few lines of comments before the operations
-commence. Non-obvious ones get comments at the end of the line.
-
-```ruby
-def fallbacks_for(the_locale, opts = {})
-  # dup() to produce an array that we can mutate.
-  ret = @fallbacks[the_locale].dup
-
-  # We make two assumptions here:
-  # 1) There is only one default locale (that is, it has no less-specific
-  #    children).
-  # 2) The default locale is just a language. (Like :en, and not :"en-US".)
-  if opts[:exclude_default] &&
-      ret.last == default_locale &&
-      ret.last != language_from_locale(the_locale)
-    ret.pop
-  end
-
-  ret
-end
-```
-
-On the other hand, never describe the code. Assume the person reading the code
-knows the language (though not what you're trying to do) better than you do.
-
-<a name="no-block-comments"></a>Related: do not use block comments. They cannot
-  be preceded by whitespace and are not as easy to spot as regular comments.
-  <sup>[[link](#no-block-comments)]</sup>
-
-  ```ruby
-  # bad
-  =begin
-  comment line
-  another comment line
-  =end
-
-  # good
-  # comment line
-  # another comment line
-  ```
-
-### Punctuation, spelling and grammar
-
-Pay attention to punctuation, spelling, and grammar; it is easier to read
-well-written comments than badly written ones.
-
-Comments should be as readable as narrative text, with proper capitalization
-and punctuation. In many cases, complete sentences are more readable than
-sentence fragments. Shorter comments, such as comments at the end of a line of
-code, can sometimes be less formal, but you should be consistent with your
-style.
-
-Although it can be frustrating to have a code reviewer point out that you are
-using a comma when you should be using a semicolon, it is very important that
-source code maintain a high level of clarity and readability. Proper
-punctuation, spelling, and grammar help with that goal.
-
-### TODO comments
-
-Use TODO comments for code that is temporary, a short-term solution, or
-good-enough but not perfect.
-
-TODOs should include the string TODO in all caps, followed by the full name
-of the person who can best provide context about the problem referenced by the
-TODO, in parentheses. A colon is optional. A comment explaining what there is
-to do is required. The main purpose is to have a consistent TODO format that
-can be searched to find the person who can provide more details upon request.
-A TODO is not a commitment that the person referenced will fix the problem.
-Thus when you create a TODO, it is almost always your name that is given.
-
-```ruby
-  # bad
-  # TODO(RS): Use proper namespacing for this constant.
-
-  # bad
-  # TODO(drumm3rz4lyfe): Use proper namespacing for this constant.
-
-  # good
-  # TODO(Ringo Starr): Use proper namespacing for this constant.
-```
-
-### Commented-out code
-
-* <a name="commented-code"></a>Never leave commented-out code in our codebase.
-    <sup>[[link](#commented-code)]</sup>
 
 ## Methods
 
@@ -523,20 +340,21 @@ Thus when you create a TODO, it is almost always your name that is given.
     def obliterate(things, gently = true, except = [], at = Time.now)
       ...
     end
+    
 
-    # good
-    def obliterate(things, gently: true, except: [], at: Time.now)
-      ...
-    end
-
-    # good
+    # bad
     def obliterate(things, options = {})
       options = {
-        :gently => true, # obliterate with soft-delete
+        gently: true, # obliterate with soft-delete
         :except => [], # skip obliterating these things
         :at => Time.now, # don't obliterate them until later
       }.merge(options)
 
+      ...
+    end
+
+    # good
+    def obliterate(things, gently: true, except: [], at: Time.now)
       ...
     end
     ```
