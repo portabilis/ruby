@@ -1572,5 +1572,5 @@ ________________________________________________________________________________
 
 TODO
 
-[ ] Adicionar o texto [Clean Code](https://www.slideshare.net/fabioperrella56/campus-code-boas-prticas-em-rails-57319777)
-[ ] Adicionar os [Design Patterns](https://www.sitepoint.com/7-design-patterns-to-refactor-mvc-components-in-rails/)
+[] Adicionar o texto [Clean Code](https://www.slideshare.net/fabioperrella56/campus-code-boas-prticas-em-rails-57319777)
+[] Adicionar os [Design Patterns](https://www.sitepoint.com/7-design-patterns-to-refactor-mvc-components-in-rails/)
