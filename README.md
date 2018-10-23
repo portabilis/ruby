@@ -432,7 +432,7 @@ Portions of this section borrow heavily from the Google
     render(:partial => 'foo')
 
     # okay
-    render :partial => 'foo'
+    render partial: 'foo'
     ```
 
 In either case:
@@ -446,7 +446,7 @@ In either case:
     get '/v1/reservations', { :id => 54875 }
 
     # good
-    get '/v1/reservations', :id => 54875
+    get '/v1/reservations', id: 54875
     ```
 
 ## Conditional Expressions
@@ -542,12 +542,12 @@ In either case:
 
     ```ruby
       # bad
-      unless foo? && bar?
+      if !(foo? && bar?)
         ...
       end
 
-      # okay
-      if !(foo? && bar?)
+      # good
+      unless foo? && bar?
         ...
       end
     ```
@@ -686,10 +686,22 @@ In either case:
   def compute
     server = find_server
     return unless server
+    
     client = server.client
     return unless client
+    
     request = client.make_request
     return unless request
+    
+    process_request(request)
+  end
+  
+  # good
+  def compute
+    return unless server
+    return unless client
+    return unless request
+    
     process_request(request)
   end
   ```
@@ -707,6 +719,7 @@ In either case:
   # good
   [0, 1, 2, 3].each do |item|
     next unless item > 1
+    
     puts item
   end
   ```
