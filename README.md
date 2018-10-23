@@ -1566,3 +1566,11 @@ In either case:
 [ruby-naming-bang]: http://dablog.rubypal.com/2007/8/15/bang-methods-or-danger-will-rubyist
 [ruby-freeze]: https://blog.honeybadger.io/when-to-use-freeze-and-frozen-in-ruby/
 [avoid-else-return-early]: http://blog.timoxley.com/post/47041269194/avoid-else-return-early
+
+
+________________________________________________________________________________________
+
+TODO
+
+[ ] Adicionar o texto (Clean Code)[https://www.slideshare.net/fabioperrella56/campus-code-boas-prticas-em-rails-57319777]
+[ ] Adicionar os (Design Patterns)[https://www.sitepoint.com/7-design-patterns-to-refactor-mvc-components-in-rails/]
